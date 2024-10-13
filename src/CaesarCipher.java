@@ -6,45 +6,38 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class CaesarCipher {
-    // Метод шифрования текста
     public static String encrypt(String text, int key) {
         StringBuilder encrypted = new StringBuilder();
         for (char ch : text.toCharArray()) {
             if (Character.isLetter(ch)) {
-                // Понимаем, какой алфавит использовать
-                if (ch >= 'a' && ch <= 'z') { // английские буквы
+                if (ch >= 'a' && ch <= 'z') {
                     encrypted.append((char) ((ch - 'a' + key) % 26 + 'a'));
                 } else if (ch >= 'A' && ch <= 'Z') { // заглавные английские буквы
                     encrypted.append((char) ((ch - 'A' + key) % 26 + 'A'));
                 }
             } else {
-                encrypted.append(ch); // Добавляем символ без изменений
+                encrypted.append(ch);
             }
         }
         return encrypted.toString();
     }
 
-    // Метод расшифрования текста
     public static String decrypt(String text, int key) {
-        return encrypt(text, 26 - key); // Правильное расшифрование
+        return encrypt(text, 26 - key);
     }
 
-    // Чтение из файла
     public static String readFile(Path path) throws IOException {
         return new String(Files.readAllBytes(path));
     }
 
-    // Запись в файл
     public static void writeFile(Path path, String content) throws IOException {
         Files.write(path, content.getBytes());
     }
 
-    // Валидация ключа
     public static boolean isValidKey(int key) {
-        return key >= 1 && key <= 25; // Проверяем, что ключ находится в пределах от 1 до 25
+        return key >= 1 && key <= 25;
     }
 
-    // Обработка входных данных
     public static void processInput(int mode, String filePath, int key) {
         Path path = Paths.get(filePath);
 
@@ -75,7 +68,6 @@ public class CaesarCipher {
             return;
         }
 
-        // Записываем в новый файл в ту же директорию
         Path outputPath = path.getParent().resolve(newFilePath);
         try {
             writeFile(outputPath, result);
@@ -85,7 +77,6 @@ public class CaesarCipher {
         }
     }
 
-    // Метод расшифровки с перебором всех ключей (brute force)
     public static void bruteForceDecrypt(String filePath) {
         Path path = Paths.get(filePath);
         if (!Files.exists(path)) {
@@ -103,7 +94,6 @@ public class CaesarCipher {
 
         for (int key = 1; key <= 25; key++) {
             String decrypted = decrypt(content, key);
-            // Выводим расшифрованный текст с указанием ключа и длины текста
             System.out.println("Ключ " + key + ": " + decrypted + " (" + decrypted.length() + " символов)");
         }
     }
@@ -115,10 +105,9 @@ public class CaesarCipher {
         int mode = scanner.nextInt();
 
         System.out.print("Введите путь к файлу: ");
-        scanner.nextLine(); // Очистка буфера
+        scanner.nextLine();
         String filePath = scanner.nextLine();
 
-        // Обработка ввода только для режима расшифрования с ключом
         if (mode == 2 || mode == 1) {
             System.out.print("Введите ключ (1-25): ");
             int key = scanner.nextInt();
